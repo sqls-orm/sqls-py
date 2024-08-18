@@ -7,7 +7,6 @@ async def test():
 
     # 1. where_and | kwargs | kwargs | one
     async with sqlx as cnn:
-        cnn.update().where()
         user = await cnn.update(User).set(
             username='initial',
         ).where_and(

@@ -51,25 +51,19 @@ class Insert[S: Schema](Returning, Result):
             values: Union[
                 dict[Union[Column, str], Any],
                 Iterable[dict[Union[Column, str], Any]]
-            ] = (),
+            ] = None,
             **_values: Union[Column, str],
     ) -> Insert[S]:
-        # TODO
-        # .values(column=value)
-        # .values([{column: value}, {column: value}])
-        # .values({Schema.model().column: value})
-        # .values([{Schema.model().column: value}, {Schema.model().column: value}])
-        if isinstance(values, dict):
-            values |= _values
-            columns: str = ', '.join(f'`{col}`' for col in values.keys())
-            placeholders: str = ', '.join('%s' for _ in range(len(values)))
-        elif values:
-            columns: str = ', '.join(f'`{col}`' for col in values[0].keys())
-            placeholders = ', '.join(', '.join('%s' for _ in range(len(set))) for set in values)
-        else:
-            values = _values
-            columns: str = ', '.join(f'`{col}`' for col in values.keys())
-            placeholders: str = ', '.join('%s' for _ in range(len(values)))
+        if isinstance(values, dict) or _values:
+            __values = values | _values if values else _values
+            columns: str = ', '.join(f'`{col}`' for col in __values.keys())
+            placeholders: str = ', '.join('%s' for _ in range(len(__values)))
+            __args = __values.values()
+        elif isinstance(values, Iterable):
+            __values = values
+            columns: str = ', '.join(f'`{col}`' for col in __values[0].keys())
+            placeholders = ', '.join(f'({', '.join('%s' for _ in range(len(set)))})' for set in __values)
+            __args = [arg for arg in [set for set in __values]]
         self._query.update(f'({columns}) VALUES ({placeholders})')
-        self._args.update(*values.values())
+        self._args.update(*__args)
         return self

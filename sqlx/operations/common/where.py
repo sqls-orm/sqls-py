@@ -8,7 +8,7 @@ from ...types import Column, Schema
 
 class Where[S: Schema](Result):
     @overload
-    def where(self, condition: Union[Column, str], /) -> Self[S]:
+    def where(self, conditions: Union[Column, str], /) -> Self[S]:
         """
         .where((Schema.model().col1 == val1) & (Schema.model().col1 == val1))
         .where((Schema.model().col1 == val1) | (Schema.model().col1 == val1))
@@ -28,25 +28,37 @@ class Where[S: Schema](Result):
 
     def where(
             self,
-            condition: Union[Column, str],
-            conditions: dict[Union[Column, str], Any],
+            conditions: Union[
+                Union[Column, str],
+                dict[Union[Column, str], Any],
+            ] = None,
             **_conditions: Any,
     ) -> Self[S]:
-        # TODO
-        self._query.update(f'WHERE {conditions.value}')
-        self._args.update(*conditions.args._values)
+        if isinstance(conditions, Column):
+            __conditions = f'WHERE {conditions.value}'
+            __args = conditions.args._values
+        else:
+            conditions = conditions or _conditions
+            __conditions = f'WHERE {', '.join(f'`{column}` = %s' for column in conditions.keys())}'
+            __args = conditions.values()
+        self._query.update(f'WHERE {__conditions}')
+        self._args.update(*__args)
         return self
 
     def __where(
             self,
             on: Literal['AND', 'OR', '_'],
-            conditions: Optional[dict[Union[Column, Any]]] = None,
+            conditions: dict[Union[Column, Any]] = None,
             **_conditions: Any,
     ) -> Self[S]:
-        # TODO
-        self._args.update(*conditions.values())
-        conditions: str = f' {on} '.join(conditions.keys())
-        self._query.update(f'WHERE {conditions}')
+        if conditions and _conditions:
+            __conditions = conditions | _conditions
+        if conditions:
+            __conditions = conditions
+        elif _conditions:
+            __conditions = _conditions
+        self._args.update(*__conditions.values())
+        self._query.update(f'WHERE {f' {on} '.join(f'`{column}` = %s' for column in __conditions.keys())}')
         return self
 
     @overload
@@ -63,7 +75,7 @@ class Where[S: Schema](Result):
 
     def where_and(
             self,
-            conditions: Optional[dict[Union[Column, Any]]] = None,
+            conditions: dict[Union[Column, Any]] = None,
             **_conditions: Any,
     ) -> Self[S]:
         self.__where('AND', conditions, **_conditions)
@@ -83,7 +95,7 @@ class Where[S: Schema](Result):
 
     def where_or(
             self,
-            conditions: Optional[dict[Union[Column, Any]]] = None,
+            conditions: dict[Union[Column, Any]] = None,
             **_conditions: Any,
     ) -> Self[S]:
         self.__where('OR', conditions, **_conditions)

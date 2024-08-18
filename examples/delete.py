@@ -8,5 +8,5 @@ async def test():
     async with sqlx as cnn:
         users = await cnn.delete(User).where({
             User.model().username: 'username',
-        }).returning(User.username).all()
+        }).returning(User.model().username).all()
         print(users)
