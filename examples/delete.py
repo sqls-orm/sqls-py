@@ -6,6 +6,7 @@ async def test():
     sqlx = await db()
 
     async with sqlx as cnn:
-        await cnn.delete(User).where({
+        users = await cnn.delete(User).where({
             User.model().username: 'username',
         }).returning(User.username).all()
+        print(users)

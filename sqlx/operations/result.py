@@ -28,7 +28,7 @@ class Result[S: Schema]:
                 yield Row(record)
 
     async def __anext__(self):
-        ...
+        """TODO"""
 
     # async def all(self) -> list[Row[str, Any]]:
     async def all(self) -> list[S]:

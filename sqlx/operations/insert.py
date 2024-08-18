@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Union, Any, Iterable
+from typing import Union, Any, Iterable, overload
 
 from .common import Returning
 from .result import Result
@@ -12,11 +12,49 @@ class Insert[S: Schema](Returning, Result):
         self._query.update(f'INSERT INTO `{schema_t.__table__}`')
         return self
 
+    @overload
     def values(
             self,
-            values: Union[dict[Union[Column, str], Any], Iterable[dict[Union[Column, str], Any]]] = (),
+            **values: Any,
+    ) -> Insert[S]:
+        """
+        .values(col1=val1, col2=val2)
+        """
+
+    @overload
+    def values(
+            self,
+            values: dict[Union[Column, str], Any],
+    ) -> Insert[S]:
+        """
+        .values({Schema.model().col1: val1, Schema.model().col2: val2})
+        """
+
+    @overload
+    def values(
+            self,
+            values: Iterable[dict[Union[Column, str], Any]],
+    ) -> Insert[S]:
+        """
+        .values([
+            {Schema.model().col1: val1, Schema.model().col2: val2},
+            {Schema.model().col1: val3, Schema.model().col2: val4},
+        ])
+        .values([
+            dict(col1=val1, col2=val2),
+            dict(col1=val3, col2=val4),
+        ])
+        """
+
+    def values(
+            self,
+            values: Union[
+                dict[Union[Column, str], Any],
+                Iterable[dict[Union[Column, str], Any]]
+            ] = (),
             **_values: Union[Column, str],
     ) -> Insert[S]:
+        # TODO
         # .values(column=value)
         # .values([{column: value}, {column: value}])
         # .values({Schema.model().column: value})
