@@ -1,0 +1,9 @@
+async def test():
+    async with sqlx as cnn:
+        async for user in cnn.select(User.model().username, User.model().password).fr0m(User):
+            ...
+        async for user in cnn.select(username=User.model().username, password=User.model().password).fr0m(User):
+            ...
+        async for user in cnn.select(User.model().username, password=User.model().password).fr0m(User):
+            ...
+        await cnn('SELECT * FROM user').all()
