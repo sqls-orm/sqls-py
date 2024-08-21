@@ -1,17 +1,19 @@
 from __future__ import annotations
 
+import asyncio
+
 import aiomysql
 
-from .operations import Connection
 
-
-class SQLX:
-    def __init__(self, pool: aiomysql.Pool):
-        self._pool: aiomysql.Pool = pool
-
-    async def __aenter__(self) -> Connection:
-        async with self._pool.acquire() as cnn:
-            return Connection(cnn=cnn)
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        ...
+class SQLX(aiomysql.pool.Pool):
+    def __init__(
+            self,
+            minsize: int = 1,
+            maxsize: int = 10,
+            echo: bool = False,
+            pool_recycle: int = -1,
+            loop: asyncio.AbstractEventLoop = asyncio.get_event_loop(),
+            **kwargs,
+    ):
+        super().__init__(minsize, maxsize, echo, pool_recycle, loop, **kwargs)
+        self.is_serving()
