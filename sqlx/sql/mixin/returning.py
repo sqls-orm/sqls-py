@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from typing import Union, overload, Self
 
-from ..result import Result
+from sqlx.core.result import Result
 from ...types import Column, Schema
 
 
-class Returning[S: Schema](Result):
+class ReturningMixin[S: Schema](Result):
     @overload
     def returning(
             self,
             *columns: Union[Column, str],
-    ) -> Self[S]:
+    ) -> Self:
         """
         >>> .returning('col1', 'col2')
         >>> .returning('col1', Schema.model().col2)
@@ -24,7 +24,7 @@ class Returning[S: Schema](Result):
     def returning(
             self,
             **alias: Union[Column, str],
-    ) -> Self[S]:
+    ) -> Self:
         """
         >>> .returning(alias1='col1', alias2='col2')
         >>> .returning(alias1='col1', alias2=Schema.model().col2)
@@ -37,7 +37,7 @@ class Returning[S: Schema](Result):
             self,
             *args: Union[Column, str],
             **kwargs: Union[Column, str],
-    ) -> Self[S]:
+    ) -> Self:
         columns = ', '.join((
             ', '.join(f'`{column}`' for column in args),
             ', '.join(f'`{column}` AS `{alias}`' for alias, column in kwargs.items()),

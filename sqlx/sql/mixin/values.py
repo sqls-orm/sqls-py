@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from typing import Self, overload, Union, Any, Iterable
 
-from ..result import Result
+from sqlx.core.result import Result
 from ...types import Schema, Column
 
 
-class Values[S: Schema](Result):
+class ValuesMixin[S: Schema](Result):
     @overload
     def values(
             self,
             **values: Any,
-    ) -> Self[S]:
+    ) -> Self:
         """
         >>> .values(col1=val1, col2=val2)
         """
@@ -20,7 +20,7 @@ class Values[S: Schema](Result):
     def values(
             self,
             values: dict[Union[Column, str], Any],
-    ) -> Self[S]:
+    ) -> Self:
         """
         >>> .values({col1: val1, Schema.model().col2: val2})
         """
@@ -29,7 +29,7 @@ class Values[S: Schema](Result):
     def values(
             self,
             values: Iterable[dict[Union[Column, str], Any]],
-    ) -> Self[S]:
+    ) -> Self:
         """
         >>> .values([
         >>>     {Schema.model().col1: val1, Schema.model().col2: val2},
@@ -52,7 +52,7 @@ class Values[S: Schema](Result):
                 Iterable[dict[Union[Column, str], Any]],
             ] = None,
             **kwargs: Union[Column, str],
-    ) -> Self[S]:
+    ) -> Self:
         if isinstance(as_dict_or_many, dict):
             as_dict = as_dict_or_many
             columns = ', '.join(f'`{col}`' for col in as_dict.keys())

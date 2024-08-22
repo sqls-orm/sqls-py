@@ -69,7 +69,7 @@ class Column:
         return self.value
 
     def desc(self) -> str:
-        return f'{self.value} DESC'
+        return f'`{self.value}` DESC'
 
     def asc(self) -> str:
-        return f'{self.value} ASC'
+        return f'`{self.value}` ASC'

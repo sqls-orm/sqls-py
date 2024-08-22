@@ -1,20 +1,16 @@
-from __future__ import annotations
+from typing import overload, Union, Iterable
 
-from typing import Union, Iterable, overload, Self
+from ._vendor import VendorBase
+from ..queries import SelectQuery
+from ...types import Column
 
-from .. import mixin
-from ...types import Schema, Column
 
-
-class Select[S: Schema](
-    mixin.From,
-    mixin.Where,
-):
+class SelectVendor(VendorBase):
     @overload
     def select(
             self,
             string: str,
-    ) -> Self[S]:
+    ) -> SelectQuery:
         """
         >>> .select('COUNT(column) as count_column')
         >>> .select(f'COUNT({Schema.model().column}) as count_column')
@@ -27,7 +23,7 @@ class Select[S: Schema](
     def select(
             self,
             alias: dict[str, Union[Column, str]],
-    ) -> Self[S]:
+    ) -> SelectQuery:
         """
         >>> .select({alias1: 'col1', alias2: 'col2'})
         >>> .select({alias1: Schema.model().col1, alias2: Schema.model().col2})
@@ -39,7 +35,7 @@ class Select[S: Schema](
     def select(
             self,
             *columns: Iterable[Union[Column, str]],
-    ) -> Self[S]:
+    ) -> SelectQuery:
         """
         >>> .select('col1', 'col2')
         >>> .select(Schema.model().col1, Schema.model().col2)
@@ -51,7 +47,7 @@ class Select[S: Schema](
     def select(
             self,
             **alias: Union[Column, str],
-    ) -> Self[S]:
+    ) -> SelectQuery:
         """
         >>> .select(alias1='col1', alias2='col2')
         >>> .select(alias1=Schema.model().col1, alias2=Schema.model().col2)
@@ -64,7 +60,7 @@ class Select[S: Schema](
             self,
             *columns: Iterable[Union[Column, str]],
             **alias: Union[Column, str],
-    ) -> Self[S]:
+    ) -> SelectQuery:
         """
         >>> .select('col1', Schema.model().col2, alias3='col3', alias4=Schema.model().col4)
         :param columns:
@@ -79,7 +75,7 @@ class Select[S: Schema](
                 Iterable[Union[Column, str]]
             ],
             **alias: Union[Column, str],
-    ) -> Self[S]:
+    ) -> SelectQuery:
         if as_dict_or_args:
             if isinstance(as_dict_or_args[0], dict) and alias:
                 as_dict = as_dict_or_args | alias
@@ -96,6 +92,4 @@ class Select[S: Schema](
         else:
             columns = '*'
 
-        self._query.update(f'SELECT {columns}')
-
-        return self
+        return SelectQuery(cnnmgr=self.default, query=f'SELECT {columns}')

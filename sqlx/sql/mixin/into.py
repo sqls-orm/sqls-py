@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from typing import Union, overload, Self
 
-from ..result import Result
-from ...types import Column, Schema
+from sqlx.core.result import Result
+from ...types import Schema
 
 
-class Into[S: Schema](Result):
+class IntoMixin[S: Schema](Result):
     @overload
     def into(
             self,
             table: type[S],
-    ) -> Self[S]:
+    ) -> Self:
         """
         >>> .into(Schema)
         :param table:
@@ -22,7 +22,7 @@ class Into[S: Schema](Result):
     def into(
             self,
             table: str,
-    ) -> Self[S]:
+    ) -> Self:
         """
         >>> .into('table')
         :param table:
@@ -35,7 +35,7 @@ class Into[S: Schema](Result):
                 type[S],
                 str,
             ],
-    ) -> Self[S]:
+    ) -> Self:
         if isinstance(table, str):
             table = table
         elif issubclass(table, Schema):

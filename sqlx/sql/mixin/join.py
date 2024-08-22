@@ -2,18 +2,18 @@ from __future__ import annotations
 
 from typing import Union, overload, Self, Literal
 
-from ..result import Result
+from sqlx.core.result import Result
 from ...types import Column, Schema
 
 
-class Join[S: Schema](Result):
+class JoinMixin[S: Schema](Result):
     @overload
     def join(
             self,
             table: str,
             *,
             type: Literal['INNER', 'LEFT', 'RIGHT', 'CROSS'] = 'INNER',
-    ) -> Self[S]:
+    ) -> Self:
         """
         >>> .join('tablename')
         :param table:
@@ -27,7 +27,7 @@ class Join[S: Schema](Result):
             table: type[S],
             *,
             type: Literal['INNER', 'LEFT', 'RIGHT', 'CROSS'] = 'INNER',
-    ) -> Self[S]:
+    ) -> Self:
         """
         >>> .join(Schema)
         :param table:
@@ -43,7 +43,7 @@ class Join[S: Schema](Result):
             ],
             *,
             type: Literal['INNER', 'LEFT', 'RIGHT', 'CROSS'] = 'INNER',
-    ) -> Self[S]:
+    ) -> Self:
         if isinstance(table, str):
             table = table
         elif issubclass(table, Schema):

@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from typing import Union, overload, Self
 
-from ..result import Result
+from sqlx.core.result import Result
 from ...types import Column, Schema
 
 
-class OrderBy[S: Schema](Result):
+class OrderByMixin[S: Schema](Result):
     @overload
     def order_by(
             self,
             *columns: Column,
-    ) -> Self[S]:
+    ) -> Self:
         """
         >>> .order_by(Schema.col1.asc(), Schema.col2.desc())
         :param columns:
@@ -22,7 +22,7 @@ class OrderBy[S: Schema](Result):
     def order_by(
             self,
             *columns: str,
-    ) -> Self[S]:
+    ) -> Self:
         """
         >>> .order_by(col1, col2)
         :param columns:
@@ -33,7 +33,7 @@ class OrderBy[S: Schema](Result):
     def order_by(
             self,
             **columns: str,
-    ) -> Self[S]:
+    ) -> Self:
         """
         >>> .order_by(col1='asc', col2='desc')
         :param columns:
@@ -47,11 +47,11 @@ class OrderBy[S: Schema](Result):
                 str,
             ],
             **kwargs: str,
-    ) -> Self[S]:
+    ) -> Self:
         if args:
-            columns = ', '.join(f'`{column}`' for column in args)
+            columns = ', '.join(f'{column}' for column in args)
         elif kwargs:
-            columns = ', '.join(f'`{column}` {order.upper()}' for column, order in kwargs.items())
+            columns = ', '.join(f'{column} {order.upper()}' for column, order in kwargs.items())
         else:
             raise NotImplementedError('No matching @overload found for `sqlx.order_by(...)`')
 

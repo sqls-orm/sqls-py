@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from typing import Self
 
-from ..result import Result
+from sqlx.core.result import Result
 from ...types import Schema
 
 
-class Limit[S: Schema](Result):
+class LimitMixin[S: Schema](Result):
     def limit(
             self,
             limit: int,
             /,
-    ) -> Self[S]:
+    ) -> Self:
         """
 
         :param limit:
