@@ -12,11 +12,13 @@ class User(Schema):
 
 
 async def main():
-    sqlx = await SQLX.create_pool(
+    sqlx = SQLX(
         db='test',
         user='root',
         password='password',
     )
+
+    await sqlx.create_pool()
 
     users = await sqlx.select().fr0m(User).where({
         User.model().username: 'username'

@@ -7,12 +7,12 @@ from sqlx.sql.vendor import SQLVendor
 
 
 class SQLX(SQLVendor):
-    def __init__(self, pool: aiomysql.Pool):
-        self.pool: aiomysql.Pool = pool
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
 
-    @classmethod
-    async def create_pool(cls, *args, **kwargs) -> SQLX:
-        return SQLX(pool=await aiomysql.create_pool(*args, **kwargs))
+    async def create_pool(self) -> None:
+        self.pool = await aiomysql.create_pool(*self.args, **self.kwargs)
 
     async def close_pool(self) -> None:
         self.pool.close()
