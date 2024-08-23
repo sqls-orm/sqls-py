@@ -18,16 +18,6 @@ async def main():
         password='password',
     )
 
-    async with sqlx as cnn:
-        print(cnn)
-        print(cnn.cnn)
-        users = await cnn.select().fr0m(User).where({
-            User.model().username: 'username'
-        }).order_by(
-            User.model().username.desc()
-        ).limit(10).offset(5).all()
-        print(users)
-
     users = await sqlx.select().fr0m(User).where({
         User.model().username: 'username'
     }).order_by(

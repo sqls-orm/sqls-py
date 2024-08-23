@@ -4,4 +4,4 @@ from ..queries import DeleteQuery
 
 class DeleteVendor(VendorBase):
     def delete(self) -> DeleteQuery:
-        return DeleteQuery(cnnmgr=self.default, query='DELETE')
+        return DeleteQuery(pool=self.pool, query='DELETE')

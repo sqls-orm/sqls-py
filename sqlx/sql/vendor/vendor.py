@@ -23,4 +23,4 @@ class SQLVendor(
         :param args:
         :return:
         """
-        return Result(cnnmgr=self.default, query=query, args=args)
+        return Result(pool=self.pool, query=query, args=args)

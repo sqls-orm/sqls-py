@@ -92,4 +92,4 @@ class SelectVendor(VendorBase):
         else:
             columns = '*'
 
-        return SelectQuery(cnnmgr=self.default, query=f'SELECT {columns}')
+        return SelectQuery(pool=self.pool, query=f'SELECT {columns}')

@@ -4,4 +4,4 @@ from ..queries import UpsertQuery
 
 class UpsertVendor(VendorBase):
     def upsert(self) -> UpsertQuery:
-        return UpsertQuery(cnnmgr=self.default, query='REPLACE')
+        return UpsertQuery(pool=self.pool, query='REPLACE')

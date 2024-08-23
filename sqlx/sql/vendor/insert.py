@@ -4,4 +4,4 @@ from ..queries import InsertQuery
 
 class InsertVendor(VendorBase):
     def insert(self) -> InsertQuery:
-        return InsertQuery(cnnmgr=self.default, query='INSERT')
+        return InsertQuery(pool=self.pool, query='INSERT')

@@ -43,4 +43,4 @@ class UpdateVendor(VendorBase):
         else:
             raise NotImplementedError('No matching @overload found for `sqlx.update(...)`')
 
-        return UpdateQuery(cnnmgr=self.default, query=f'UPDATE {table}')
+        return UpdateQuery(pool=self.pool, query=f'UPDATE {table}')

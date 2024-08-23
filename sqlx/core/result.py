@@ -10,24 +10,16 @@ from sqlx.types import Schema, Query, Args, Row
 class Result[S: Schema]:
     def __init__(
             self,
-            cnnmgr: 'ConnectionManager',
+            pool: aiomysql.Pool,
             query: str,
             args: Iterable[Any] = (),
     ):
-        self._cnnmgr: 'ConnectionManager' = cnnmgr
+        self._pool: aiomysql.Pool = pool
         self._query: Query = Query().update(query)
         self._args: Args = Args().update(*args)
 
     def __await__(self):
         return self.execute().__await__()
-
-    async def __aenter__(self) -> tuple[type[aiomysql.Cursor], aiomysql.Connection]:
-        async with self._cnnmgr as cnn:
-            async with cnn.cursor(aiomysql.SSDictCursor) as cursor:
-                return cursor, cnn
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        ...
 
     async def __aiter__(
             self,
@@ -44,8 +36,8 @@ class Result[S: Schema]:
             /,
     ) -> list[S]:
         # async with self as (cursor, cnn):
-        async with self._cnnmgr as cnn:
-            async with cnn.cursor(aiomysql.SSDictCursor) as cursor:
+        async with self._pool.acquire() as cnn:
+            async with cnn.cursor(aiomysql.DictCursor) as cursor:
                 try:
                     await cursor.execute(self._query.parse(), self._args.parse())
                     await cnn.commit()
@@ -59,20 +51,22 @@ class Result[S: Schema]:
             into: type[S] = Row,
             /,
     ) -> Optional[S]:
-        async with self as (cursor, cnn):
-            try:
-                await cursor.execute(self._query.parse(), self._args.parse())
-                await cnn.commit()
-            except Exception as e:
-                await cnn.rollback()
-                raise Exception(f'Failed "{self._query.parse()}" with "{self._args.parse()}", since: "{e}"')
-            return into(**row) if (row := await cursor.fetchone()) else None
+        async with self._pool.acquire() as cnn:
+            async with cnn.cursor(aiomysql.DictCursor) as cursor:
+                try:
+                    await cursor.execute(self._query.parse(), self._args.parse())
+                    await cnn.commit()
+                except Exception as e:
+                    await cnn.rollback()
+                    raise Exception(f'Failed "{self._query.parse()}" with "{self._args.parse()}", since: "{e}"')
+                return into(**row) if (row := await cursor.fetchone()) else None
 
     async def execute(self) -> None:
-        async with self as (cursor, cnn):
-            try:
-                await cursor.execute(self._query.parse(), self._args.parse())
-                await cnn.commit()
-            except Exception as e:
-                await cnn.rollback()
-                raise Exception(f'Failed "{self._query.parse()}" with "{self._args.parse()}", since: "{e}"')
+        async with self._pool.acquire() as cnn:
+            async with cnn.cursor(aiomysql.DictCursor) as cursor:
+                try:
+                    await cursor.execute(self._query.parse(), self._args.parse())
+                    await cnn.commit()
+                except Exception as e:
+                    await cnn.rollback()
+                    raise Exception(f'Failed "{self._query.parse()}" with "{self._args.parse()}", since: "{e}"')
