@@ -6,7 +6,7 @@ from sqlx.core.result import Result
 from ...types import Schema
 
 
-class FromMixin[S: Schema](Result):
+class FromMixin(Result):
     @overload
     def fr0m(
             self,
@@ -21,7 +21,7 @@ class FromMixin[S: Schema](Result):
     @overload
     def fr0m(
             self,
-            table: type[S],
+            table: type[Schema],
     ) -> Self:
         """
         >>> .fr0m(Schema)
@@ -32,17 +32,17 @@ class FromMixin[S: Schema](Result):
     def fr0m(
             self,
             table: Union[
-                type[S],
+                type[Schema],
                 str,
             ],
     ) -> Self:
         if isinstance(table, str):
-            table = table
-        elif issubclass(table, Schema):
-            table = table.__table__
+            ...
+        elif table := getattr(table, '__table__', None):
+            ...
         else:
             raise NotImplementedError('No mathing @overload found for `sqlx.fr0m(...)`')
 
-        self._query.update(f'FROM {table}')
+        self._query.update(f'FROM `{table}`')
 
         return self

@@ -1,3 +1,4 @@
+from .count import CountQuery
 from .delete import DeleteQuery
 from .insert import InsertQuery
 from .select import SelectQuery

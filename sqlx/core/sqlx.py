@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import aiomysql
 
-from .connection import ConnectionManager
 from sqlx.sql.vendor import SQLVendor
 
 
 class SQLX(SQLVendor):
+    pool: aiomysql.Pool
+
     def __init__(self, *args, **kwargs):
         self.args = args
         self.kwargs = kwargs
@@ -17,6 +18,3 @@ class SQLX(SQLVendor):
     async def close_pool(self) -> None:
         self.pool.close()
         await self.pool.wait_closed()
-
-    def __del__(self) -> None:
-        self.pool.close()

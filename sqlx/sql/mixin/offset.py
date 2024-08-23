@@ -6,7 +6,7 @@ from sqlx.core.result import Result
 from ...types import Schema
 
 
-class OffsetMixin[S: Schema](Result):
+class OffsetMixin(Result):
     def offset(
             self,
             offset: int,

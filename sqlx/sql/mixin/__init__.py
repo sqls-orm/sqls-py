@@ -1,5 +1,6 @@
 from .fr0m import FromMixin
 from .into import IntoMixin
+from .join import JoinMixin
 from .limit import LimitMixin
 from .offset import OffsetMixin
 from .order_by import OrderByMixin

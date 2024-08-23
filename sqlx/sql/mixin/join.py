@@ -6,7 +6,7 @@ from sqlx.core.result import Result
 from ...types import Column, Schema
 
 
-class JoinMixin[S: Schema](Result):
+class JoinMixin(Result):
     @overload
     def join(
             self,
@@ -24,7 +24,7 @@ class JoinMixin[S: Schema](Result):
     @overload
     def join(
             self,
-            table: type[S],
+            table: type[Schema],
             *,
             type: Literal['INNER', 'LEFT', 'RIGHT', 'CROSS'] = 'INNER',
     ) -> Self:
@@ -38,20 +38,20 @@ class JoinMixin[S: Schema](Result):
     def join(
             self,
             table: Union[
-                type[S],
+                type[Schema],
                 str,
             ],
             *,
             type: Literal['INNER', 'LEFT', 'RIGHT', 'CROSS'] = 'INNER',
     ) -> Self:
         if isinstance(table, str):
-            table = table
-        elif issubclass(table, Schema):
-            table = table.__table__
+            ...
+        elif table := getattr(table, '__table__', None):
+            ...
         else:
             raise NotImplementedError('No matching @overload found for `sqlx.join(...)`')
 
-        self._query.update(f'{type} JOIN {table}')
+        self._query.update(f'{type} JOIN `{table}`')
 
         return self
 
@@ -79,7 +79,6 @@ class JoinMixin[S: Schema](Result):
         :return:
         """
 
-    @overload
     def on(
             self,
             on: Union[

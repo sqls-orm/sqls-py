@@ -14,7 +14,9 @@ class Schema(BaseModel):
 
     @classmethod
     def model(cls) -> Self:
-        return type(f'{cls.__name__}SQLX', (), {
+        return type(f'{cls.__name__}Model', (), {
             name: Column(name, table=cls.__table__)
             for name in cls.__annotations__.keys()
+        } | {
+            '__table__': cls.__table__
         })

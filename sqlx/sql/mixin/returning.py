@@ -6,7 +6,7 @@ from sqlx.core.result import Result
 from ...types import Column, Schema
 
 
-class ReturningMixin[S: Schema](Result):
+class ReturningMixin(Result):
     @overload
     def returning(
             self,

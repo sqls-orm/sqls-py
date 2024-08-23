@@ -6,7 +6,7 @@ from sqlx.core.result import Result
 from ...types import Schema
 
 
-class LimitMixin[S: Schema](Result):
+class LimitMixin(Result):
     def limit(
             self,
             limit: int,

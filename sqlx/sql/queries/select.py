@@ -4,8 +4,9 @@ from .. import mixin
 from ...types import Schema
 
 
-class SelectQuery[S: Schema](
+class SelectQuery(
     mixin.FromMixin,
+    mixin.JoinMixin,
     mixin.WhereMixin,
     mixin.OrderByMixin,
     mixin.LimitMixin,

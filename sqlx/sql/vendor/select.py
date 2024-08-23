@@ -79,16 +79,16 @@ class SelectVendor(VendorBase):
         if as_dict_or_args:
             if isinstance(as_dict_or_args[0], dict) and alias:
                 as_dict = as_dict_or_args | alias
-                columns = ', '.join(f'`{column}` AS `{_alias}`' for _alias, column in as_dict.items())
+                columns = ', '.join(f'{column} AS `{_alias}`' for _alias, column in as_dict.items())
             elif isinstance(as_dict_or_args[0], dict):
                 as_dict = as_dict_or_args[0]
-                columns = ', '.join(f'`{column}` AS `{_alias}`' for _alias, column in as_dict.items())
+                columns = ', '.join(f'{column} AS `{_alias}`' for _alias, column in as_dict.items())
             else:  # Union[Column, str]
                 as_args = as_dict_or_args
-                columns = ', '.join(f'`{column}`' for column in as_args)
+                columns = ', '.join(f'{column}' for column in as_args)
         elif alias:
             as_dict = alias
-            columns = ', '.join(f'`{column}` AS `{alias}`' for alias, column in as_dict.items())
+            columns = ', '.join(f'{column} AS `{alias}`' for alias, column in as_dict.items())
         else:
             columns = '*'
 

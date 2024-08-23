@@ -2,6 +2,7 @@ from typing import Any, Iterable
 
 from sqlx.core.result import Result
 
+from .count import CountVendor
 from .insert import InsertVendor
 from .upsert import UpsertVendor
 from .select import SelectVendor
@@ -13,6 +14,7 @@ class SQLVendor(
     InsertVendor,
     UpsertVendor,
     SelectVendor,
+    CountVendor,
     UpdateVendor,
     DeleteVendor,
 ):

@@ -15,10 +15,10 @@ class Column:
         return hash(self.value)
 
     def __or__(self, other: Column) -> Column:
-        return Column(f'({self.value}) OR ({other.value})', self.args.update(*other.args._values))
+        return Column(f'({self.value}) OR ({other.value})', Args.fr0m(self.args).update(*other.args._values))
 
     def __and__(self, other: Column) -> Column:
-        return Column(f'({self.value}) AND ({other.value})', self.args.update(*other.args._values))
+        return Column(f'({self.value}) AND ({other.value})', Args.fr0m(self.args).update(*other.args._values))
 
     @overload
     def __eq__(self, value: Column) -> Column:
@@ -45,22 +45,22 @@ class Column:
     ) -> Column:
         if isinstance(value, Column):
             return Column(f'`{self.table}.{self.value}` = `{value.table}.{value.value}`')
-        return Column(f'`{self.value}` = %s', self.args.update(value))
+        return Column(f'`{self.value}` = %s', Args.fr0m(self.args).update(value))
 
     def __ne__(self, value: Any) -> Column:
-        return Column(f'`{self.value}` != %s', self.args.update(value))
+        return Column(f'`{self.value}` != %s', Args.fr0m(self.args).update(value))
 
     def __lt__(self, value: Any) -> Column:
-        return Column(f'`{self.value}` < %s', self.args.update(value))
+        return Column(f'`{self.value}` < %s', Args.fr0m(self.args).update(value))
 
     def __le__(self, value: Any) -> Column:
-        return Column(f'`{self.value}` <= %s', self.args.update(value))
+        return Column(f'`{self.value}` <= %s', Args.fr0m(self.args).update(value))
 
     def __gt__(self, value: Any) -> Column:
-        return Column(f'`{self.value}` > %s', self.args.update(value))
+        return Column(f'`{self.value}` > %s', Args.fr0m(self.args).update(value))
 
     def __ge__(self, value: Any) -> Column:
-        return Column(f'`{self.value}` => %s', self.args.update(value))
+        return Column(f'`{self.value}` => %s', Args.fr0m(self.args).update(value))
 
     def __str__(self) -> str:
         return self.value
@@ -73,3 +73,6 @@ class Column:
 
     def asc(self) -> str:
         return f'`{self.value}` ASC'
+
+    def distinct(self) -> str:
+        return f'DISTINCT `{self.value}`'

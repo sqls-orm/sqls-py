@@ -6,7 +6,7 @@ from sqlx.core.result import Result
 from ...types import Column, Schema
 
 
-class OrderByMixin[S: Schema](Result):
+class OrderByMixin(Result):
     @overload
     def order_by(
             self,

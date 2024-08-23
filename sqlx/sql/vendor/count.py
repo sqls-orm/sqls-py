@@ -1,40 +1,40 @@
 from typing import Union, overload
 
 from ._vendor import VendorBase
-from ..queries import UpdateQuery
+from ..queries import CountQuery
 from ...types import Schema
 
 
-class UpdateVendor(VendorBase):
+class CountVendor(VendorBase):
     @overload
-    def update(
+    def count(
             self,
             table: type[Schema],
-    ) -> UpdateQuery:
+    ) -> CountQuery:
         """
-        >>> .update(Schema)
+        >>> .count(Schema)
         :param table:
         :return:
         """
 
     @overload
-    def update(
+    def count(
             self,
             table: str,
-    ) -> UpdateQuery:
+    ) -> CountQuery:
         """
-        >>> .update('table')
+        >>> .count('table')
         :param table:
         :return:
         """
 
-    def update(
+    def count(
             self,
             table: Union[
                 type[Schema],
                 str,
             ],
-    ) -> UpdateQuery:
+    ) -> CountQuery:
         if isinstance(table, str):
             ...
         elif table := getattr(table, '__table__', None):
@@ -42,4 +42,4 @@ class UpdateVendor(VendorBase):
         else:
             raise NotImplementedError('No matching @overload found for `sqlx.update(...)`')
 
-        return UpdateQuery(pool=self.pool, query=f'UPDATE `{table}`')
+        return CountQuery(pool=self.pool, query=f'SELECT COUNT(*) AS `total` FROM `{table}`')

@@ -6,11 +6,11 @@ from sqlx.core.result import Result
 from ...types import Schema
 
 
-class IntoMixin[S: Schema](Result):
+class IntoMixin(Result):
     @overload
     def into(
             self,
-            table: type[S],
+            table: type[Schema],
     ) -> Self:
         """
         >>> .into(Schema)
@@ -32,14 +32,14 @@ class IntoMixin[S: Schema](Result):
     def into(
             self,
             table: Union[
-                type[S],
+                type[Schema],
                 str,
             ],
     ) -> Self:
         if isinstance(table, str):
-            table = table
-        elif issubclass(table, Schema):
-            table = table.__table__
+            ...
+        elif table := getattr(table, '__table__', None):
+            ...
         else:
             raise NotImplementedError('No matching @overload found for `sqlx.into(...)`')
 

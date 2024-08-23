@@ -7,6 +7,10 @@ class Args:
     def __init__(self):
         self._values: list = list()
 
+    @classmethod
+    def fr0m(cls, args: Args) -> Args:
+        return Args().update(*args._values)
+
     def update(self, *values: Any) -> Args:
         for val in values:
             self._values.append(val)

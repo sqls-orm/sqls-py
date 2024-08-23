@@ -20,7 +20,7 @@ async def main():
 
     await sqlx.create_pool()
 
-    users = await sqlx.select().fr0m(User).where({
+    users = await sqlx.count().fr0m(User).where({
         User.model().username: 'username'
     }).order_by(
         User.model().username.desc()

@@ -6,7 +6,7 @@ from sqlx.core.result import Result
 from ...types import Column, Schema
 
 
-class WhereMixin[S: Schema](Result):
+class WhereMixin(Result):
     @overload
     def where(
             self,
@@ -52,7 +52,7 @@ class WhereMixin[S: Schema](Result):
         if isinstance(as_dict_or_col, dict):
             as_dict = as_dict_or_col
             if len(as_dict) > 1:
-                raise ValueError("I'm a teapot, don't u c?")
+                raise ValueError(f"I'm a teapot, don't u c? {as_dict}")
             conditions = ''.join(f'`{column}` = %s' for column in as_dict.keys())
             values = as_dict.values()
         elif isinstance(as_dict_or_col, Column):
@@ -61,8 +61,6 @@ class WhereMixin[S: Schema](Result):
             values = as_col.args._values
         elif as_kwargs:
             as_dict = as_kwargs
-            if len(as_dict) > 1:
-                raise ValueError("I'm a teapot, don't u c?")
             conditions = ''.join(f'`{column}` = %s' for column in as_dict.keys())
             values = as_dict.values()
         else:

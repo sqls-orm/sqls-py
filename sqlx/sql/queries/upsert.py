@@ -4,7 +4,7 @@ from .. import mixin
 from ...types import Schema
 
 
-class UpsertQuery[S: Schema](
+class UpsertQuery(
     mixin.IntoMixin,
     mixin.ValuesMixin,
     mixin.ReturningMixin,

@@ -6,7 +6,7 @@ from .. import mixin
 from ...types import Schema, Column
 
 
-class UpdateQuery[S: Schema](
+class UpdateQuery(
     mixin.WhereMixin,
     mixin.ReturningMixin,
 ):

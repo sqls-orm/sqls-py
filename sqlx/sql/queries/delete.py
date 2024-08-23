@@ -4,7 +4,7 @@ from .. import mixin
 from ...types import Schema
 
 
-class DeleteQuery[S: Schema](
+class DeleteQuery(
     mixin.FromMixin,
     mixin.WhereMixin,
     mixin.ReturningMixin,
