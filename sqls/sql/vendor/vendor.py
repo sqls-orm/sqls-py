@@ -1,6 +1,6 @@
 from typing import Any, Iterable
 
-from sqlx.core.result import Result
+from sqls.core.result import Result
 
 from .count import CountVendor
 from .insert import InsertVendor
@@ -20,7 +20,7 @@ class SQLVendor(
 ):
     def __call__(self, query: str, args: Iterable[Any] = ()) -> Result:
         """
-        >>> sqlx('SELECT * FROM `table` WHERE id = %s;', (1, ))
+        >>> sqls('SELECT * FROM `table` WHERE id = %s;', (1, ))
         :param query:
         :param args:
         :return:

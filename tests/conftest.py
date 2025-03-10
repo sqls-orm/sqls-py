@@ -2,17 +2,17 @@ import aiomysql
 import pytest_asyncio as aiopytest
 from pydantic import Field
 
-from sqlx import SQLX, Schema
+from sqls import SQLS, Schema
 
 
 @aiopytest.fixture(scope='session')
-async def sqlx():
-    _sqlx = SQLX(
+async def sqls():
+    _sqls = SQLS(
         db='test',
         user='root',
         password='password',
     )
-    async with _sqlx as _cnn:
+    async with _sqls as _cnn:
         await _cnn('''
             CREATE TABLE IF NOT EXISTS `user` (
               `id` int(11) PRIMARY KEY AUTO_INCREMENT,
@@ -21,7 +21,7 @@ async def sqlx():
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ''').execute()
 
-    yield _sqlx
+    yield _sqls
 
 
 class User(Schema):

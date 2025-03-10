@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Union, overload, Self
 
-from sqlx.core.result import Result
+from sqls.core.result import Result
 from ...types import Column, Schema
 
 
@@ -53,7 +53,7 @@ class OrderByMixin(Result):
         elif kwargs:
             columns = ', '.join(f'{column} {order.upper()}' for column, order in kwargs.items())
         else:
-            raise NotImplementedError('No matching @overload found for `sqlx.order_by(...)`')
+            raise NotImplementedError('No matching @overload found for `sqls.order_by(...)`')
 
         self._query.update(f'ORDER BY {columns}')
 

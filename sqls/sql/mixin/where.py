@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Union, Self, overload
 
-from sqlx.core.result import Result
+from sqls.core.result import Result
 from ...types import Column, Schema
 
 
@@ -64,7 +64,7 @@ class WhereMixin(Result):
             conditions = ''.join(f'`{column}` = %s' for column in as_dict.keys())
             values = as_dict.values()
         else:
-            raise NotImplementedError('Most likely, invalid usage of `sqlx.where`')
+            raise NotImplementedError('Most likely, invalid usage of `sqls.where`')
 
         self._query.update(f'WHERE {conditions}')
         self._args.update(*values)

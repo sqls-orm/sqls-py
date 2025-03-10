@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Union, overload, Self, Literal
 
-from sqlx.core.result import Result
+from sqls.core.result import Result
 from ...types import Column, Schema
 
 
@@ -49,7 +49,7 @@ class JoinMixin(Result):
         elif table := getattr(table, '__table__', None):
             ...
         else:
-            raise NotImplementedError('No matching @overload found for `sqlx.join(...)`')
+            raise NotImplementedError('No matching @overload found for `sqls.join(...)`')
 
         self._query.update(f'{type} JOIN `{table}`')
 
@@ -88,7 +88,7 @@ class JoinMixin(Result):
             /,
     ):
         if not isinstance(on, (str, Column)):
-            raise NotImplementedError('No matching @overload found for `sqlx.on(...)`')
+            raise NotImplementedError('No matching @overload found for `sqls.on(...)`')
 
         self._query.update(f'ON {on}')
 

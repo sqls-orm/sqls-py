@@ -4,7 +4,7 @@ from typing import Any, Optional, Iterable
 
 import aiomysql
 
-from sqlx.types import Schema, Query, Args, Row
+from sqls.types import Schema, Query, Args, Row
 
 
 class Result:

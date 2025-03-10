@@ -1,12 +1,12 @@
 import pytest
 
-from sqlx import SQLX
+from sqls import SQLS
 from .conftest import User
 
 
 @pytest.mark.asyncio(scope='session')
-async def test_column_simple(sqlx: SQLX):
-    async with sqlx as cnn:
+async def test_column_simple(sqls: SQLS):
+    async with sqls as cnn:
         user = await cnn.select().fr0m(User).where(
             User.model().username == 'initial'
         ).first()
@@ -14,8 +14,8 @@ async def test_column_simple(sqlx: SQLX):
 
 
 @pytest.mark.asyncio(scope='session')
-async def test_column_simple_and(sqlx: SQLX):
-    async with sqlx as cnn:
+async def test_column_simple_and(sqls: SQLS):
+    async with sqls as cnn:
         user = await cnn.select().fr0m(User).where(
             (User.model().username == 'initial')
             &
@@ -25,8 +25,8 @@ async def test_column_simple_and(sqlx: SQLX):
 
 
 @pytest.mark.asyncio(scope='session')
-async def test_column_simple_or(sqlx: SQLX):
-    async with sqlx as cnn:
+async def test_column_simple_or(sqls: SQLS):
+    async with sqls as cnn:
         user = await cnn.select().fr0m(User).where(
             (User.model().username == 'initial')
             |
@@ -36,8 +36,8 @@ async def test_column_simple_or(sqlx: SQLX):
 
 
 @pytest.mark.asyncio(scope='session')
-async def test_column_complex(sqlx: SQLX):
-    async with sqlx as cnn:
+async def test_column_complex(sqls: SQLS):
+    async with sqls as cnn:
         user = await cnn.select().fr0m(User).where(
             ((User.model().username == 'username') & (User.model().password == 'updated'))
             |

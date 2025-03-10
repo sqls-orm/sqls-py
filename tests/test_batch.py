@@ -1,12 +1,12 @@
 import pytest
 
-from sqlx import SQLX
+from sqls import SQLS
 from .conftest import User
 
 
 @pytest.mark.asyncio(scope='session')
-async def test_batch_direct(sqlx: SQLX) -> None:
-    async with sqlx as cnn:
+async def test_batch_direct(sqls: SQLS) -> None:
+    async with sqls as cnn:
         users = await cnn(
             'INSERT INTO `user` (username, password) VALUES (%s, %s)',
             ('username', 'password'),
@@ -20,8 +20,8 @@ async def test_batch_direct(sqlx: SQLX) -> None:
 
 
 @pytest.mark.asyncio(scope='session')
-async def test_batch_indirect(sqlx: SQLX) -> None:
-    async with sqlx as cnn:
+async def test_batch_indirect(sqls: SQLS) -> None:
+    async with sqls as cnn:
         users = await cnn.insert(User).values(username='u', password='p')
         print(users)
         users = await cnn.insert(User).values(username='u', password='p')

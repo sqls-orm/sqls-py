@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import aiomysql
 
-from sqlx.sql.vendor import SQLVendor
+from sqls.sql.vendor import SQLVendor
 
 
-class SQLX(SQLVendor):
+class SQLS(SQLVendor):
     pool: aiomysql.Pool
 
     def __init__(self, *args, **kwargs):

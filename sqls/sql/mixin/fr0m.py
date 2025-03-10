@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Union, overload, Self
 
-from sqlx.core.result import Result
+from sqls.core.result import Result
 from ...types import Schema
 
 
@@ -41,7 +41,7 @@ class FromMixin(Result):
         elif table := getattr(table, '__table__', None):
             ...
         else:
-            raise NotImplementedError('No mathing @overload found for `sqlx.fr0m(...)`')
+            raise NotImplementedError('No mathing @overload found for `sqls.fr0m(...)`')
 
         self._query.update(f'FROM `{table}`')
 

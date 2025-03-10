@@ -40,6 +40,6 @@ class UpdateVendor(VendorBase):
         elif table := getattr(table, '__table__', None):
             ...
         else:
-            raise NotImplementedError('No matching @overload found for `sqlx.update(...)`')
+            raise NotImplementedError('No matching @overload found for `sqls.update(...)`')
 
         return UpdateQuery(pool=self.pool, query=f'UPDATE `{table}`')

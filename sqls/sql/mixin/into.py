@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Union, overload, Self
 
-from sqlx.core.result import Result
+from sqls.core.result import Result
 from ...types import Schema
 
 
@@ -41,7 +41,7 @@ class IntoMixin(Result):
         elif table := getattr(table, '__table__', None):
             ...
         else:
-            raise NotImplementedError('No matching @overload found for `sqlx.into(...)`')
+            raise NotImplementedError('No matching @overload found for `sqls.into(...)`')
 
         self._query.update(f'INTO `{table}`')
 

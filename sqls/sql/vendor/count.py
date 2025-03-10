@@ -40,6 +40,6 @@ class CountVendor(VendorBase):
         elif table := getattr(table, '__table__', None):
             ...
         else:
-            raise NotImplementedError('No matching @overload found for `sqlx.update(...)`')
+            raise NotImplementedError('No matching @overload found for `sqls.update(...)`')
 
         return CountQuery(pool=self.pool, query=f'SELECT COUNT(*) AS `total` FROM `{table}`')

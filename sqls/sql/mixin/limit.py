@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Self
 
-from sqlx.core.result import Result
+from sqls.core.result import Result
 from ...types import Schema
 
 

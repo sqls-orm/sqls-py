@@ -1,5 +1,5 @@
 from pydantic import Field
-from sqlx import SQLX, Schema
+from sqls import SQLS, Schema
 import asyncio
 
 
@@ -12,22 +12,22 @@ class User(Schema):
 
 
 async def main():
-    sqlx = SQLX(
+    sqls = SQLS(
         db='test',
         user='root',
         password='password',
     )
 
-    await sqlx.create_pool()
+    await sqls.create_pool()
 
-    users = await sqlx.count().fr0m(User).where({
+    users = await sqls.count().fr0m(User).where({
         User.model().username: 'username'
     }).order_by(
         User.model().username.desc()
     ).limit(10).offset(5).all()
     print(users)
 
-    await sqlx.close_pool()
+    await sqls.close_pool()
 
 
 if __name__ == '__main__':

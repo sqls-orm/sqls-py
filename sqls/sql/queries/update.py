@@ -45,7 +45,7 @@ class UpdateQuery(
     #     elif issubclass(table, Schema):
     #         table = table.__table__
     #     else:
-    #         raise NotImplementedError('No matching @overload found for `sqlx.update(...)`')
+    #         raise NotImplementedError('No matching @overload found for `sqls.update(...)`')
     #
     #     self._query.update(f'UPDATE {table}')
     #
